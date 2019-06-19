@@ -1,0 +1,616 @@
+/*
+Patient Access Control Rules
+*/
+rule Patient_CareProvider_View {
+    description: "Allow CareProviders to view patients"
+    participant: "org.jphr.network.Patient"
+    operation: READ
+    resource: "org.jphr.network.CareProvider"
+    action: ALLOW
+}
+
+rule Patient_Patient_View {
+    description: "Allow CareProviders to view patients"
+    participant: "org.jphr.network.Patient"
+    operation: READ
+    resource: "org.jphr.network.Patient"
+    action: ALLOW
+}
+
+rule Patient_Patient_Owner {
+    description: "Allow CareProviders to view patients"
+    participant(p): "org.jphr.network.Patient"
+    operation: UPDATE, DELETE
+    resource(r): "org.jphr.network.Patient"
+    condition: (p.getIdentifier() == r.getIdentifier())
+    action: ALLOW
+}
+
+rule Patient_ManageAuthorization_Create {
+    description: "Allow All participants to CrCreateHealthRecordeate Health records"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.ManageAuthorization"
+    action: ALLOW
+}
+
+rule Patient_AuthorizationBlock_Create {
+    description: "All patients can create an authorization block through submitting ManageAuthorization transaction"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE, UPDATE, DELETE
+    resource: "org.jphr.network.AuthorizationBlock"
+    transaction(tx): "org.jphr.network.ManageAuthorization"
+    condition: (true)
+    action: ALLOW
+}
+
+rule Patient_AuthorizationBlock_View {
+  	description: "Patient can view his/her own authorization block"
+    participant(p): "org.jphr.network.Patient"
+    operation: READ
+    resource(r): "org.jphr.network.AuthorizationBlock"
+    condition: (p.getIdentifier() == r.owner.getIdentifier())
+    action: ALLOW
+}
+
+rule Patient_CreateHealthRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.CreateHealthRecord"
+    action: ALLOW
+}
+
+rule Patient_HealthRecord_Create {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.HealthRecord"
+    transaction(tx): "org.jphr.network.CreateHealthRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+rule Patient_UpdateHealthRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.UpdateHealthRecord"
+    action: ALLOW
+}
+
+rule Patient_HealthRecord_Update {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.Patient"
+    operation: UPDATE
+    resource: "org.jphr.network.HealthRecord"
+    transaction(tx): "org.jphr.network.UpdateHealthRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+rule Patient_DeleteHealthRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.DeleteHealthRecord"
+    action: ALLOW
+}
+
+rule Patient_HealthRecord_Delete {
+    description: "Allow patients to Create Health records"
+    participant(p): "org.jphr.network.Patient"
+    operation: DELETE
+    resource(r): "org.jphr.network.HealthRecord"
+    transaction(tx): "org.jphr.network.DeleteHealthRecord"
+    condition: (p.getIdentifier() == r.owner.getIdentifier())
+    action: ALLOW
+}
+
+rule Patient_ReadHealthRecords_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.ReadHealthRecords"
+    action: ALLOW
+}
+
+rule Patient_HealthRecord_Read {
+    description: "Allow patients to Create Health records"
+    participant(p): "org.jphr.network.Patient"
+    operation: READ
+    resource(r): "org.jphr.network.HealthRecord"
+    transaction(tx): "org.jphr.network.ReadHealthRecords"
+    condition: (p.getIdentifier() == r.owner.getIdentifier())
+    action: ALLOW
+}
+
+rule Patient_HealthRecords_All {
+  	description: "Allow All participants to Update Health records"
+    participant(p): "org.jphr.network.Patient"
+    operation: READ, DELETE
+    resource(r): "org.jphr.network.HealthRecord"
+    condition: (p.getIdentifier() == r.owner.getIdentifier())
+    action: ALLOW
+}
+
+rule Patient_CreateSummaryMedicalRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.CreateSummaryMedicalRecord"
+    action: ALLOW
+}
+
+rule Patient_SummaryMedicalRecord_Create {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.SummaryMedicalRecord"
+    transaction(tx): "org.jphr.network.CreateSummaryMedicalRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+rule Patient_ReadSummaryMedicalRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.ReadSummaryMedicalRecord"
+    action: ALLOW
+}
+
+rule Patient_SummaryMedicalRecord_Read {
+    description: "Allow patients to Create Health records"
+    participant(p): "org.jphr.network.Patient"
+    operation: READ
+    resource(r): "org.jphr.network.SummaryMedicalRecord"
+    transaction(tx): "org.jphr.network.ReadSummaryMedicalRecord"
+    condition: (p.getIdentifier() == r.getIdentifier())
+    action: ALLOW
+}
+
+rule Patient_UpdateSummaryMedicalRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.UpdateSummaryMedicalRecord"
+    action: ALLOW
+}
+
+rule Patient_SummaryMedicalRecord_Update {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.Patient"
+    operation: UPDATE
+    resource: "org.jphr.network.SummaryMedicalRecord"
+    transaction(tx): "org.jphr.network.UpdateSummaryMedicalRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+rule Patient_SummaryMedicalRecords_All {
+  	description: "Allow All participants to Update Health records"
+    participant(p): "org.jphr.network.Patient"
+    operation: READ
+    resource(r): "org.jphr.network.SummaryMedicalRecord"
+    condition: (p.getIdentifier() == r.owner.getIdentifier())
+    action: ALLOW
+}
+
+rule Patient_ReadAuthRequests_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.ReadAuthRequests"
+    action: ALLOW
+}
+
+rule Patient_AuthorizationRequest_Read {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.Patient"
+    operation: READ
+    resource: "org.jphr.network.AuthorizationRequest"
+    transaction(tx): "org.jphr.network.ReadAuthRequests"
+    condition: (true)
+    action: ALLOW
+}
+
+rule Patient_UpdateAuthRequest_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: ALL
+    resource: "org.jphr.network.UpdateAuthRequest"
+    action: ALLOW
+}
+
+rule Patient_AuthorizationRequest_Update {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.Patient"
+    operation: UPDATE
+    resource: "org.jphr.network.AuthorizationRequest"
+    transaction(tx): "org.jphr.network.UpdateAuthRequest"
+    condition: (true)
+    action: ALLOW
+}
+
+rule Patient_CreateAuthRequest_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.CreateAuthRequest"
+    action: ALLOW
+}
+
+rule Patient_AuthorizationRequest_All{
+    description: "Allow all participants to submit transactions"
+    participant(p): "org.jphr.network.Patient"
+    operation: ALL
+    resource(r): "org.jphr.network.AuthorizationRequest"
+    condition: (p.getIdentifier() == r.patient)
+    action: ALLOW
+}
+
+rule Patient_ReadAuthorizations_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE
+    resource: "org.jphr.network.ReadAuthorizations"
+    action: ALLOW
+}
+
+rule Patient_AuthorizationBlock_Read {
+    description: "Allow patients to Create Health records"
+    participant(p): "org.jphr.network.Patient"
+    operation: READ
+    resource(r): "org.jphr.network.AuthorizationBlock"
+    transaction(tx): "org.jphr.network.ReadAuthorizations"
+    condition: (p.getIdentifier() == r.getIdentifier())
+    action: ALLOW
+}
+
+
+rule Patient_ReadProviders_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: CREATE, READ
+    resource: "org.jphr.network.ReadProviders"
+    action: ALLOW
+}
+
+rule Patient_CareProviders_All{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.Patient"
+    operation: ALL
+    resource: "org.jphr.network.CareProvider"
+    transaction(tx): "org.jphr.network.ReadProviders"
+    condition: (true)
+    action: ALLOW
+}
+
+
+
+/*
+CareProvider access control rules
+*/
+rule CareProvider_CareProvider_View {
+    description: "Allow CareProviders to view patients"
+    participant: "org.jphr.network.CareProvider"
+    operation: READ
+    resource: "org.jphr.network.CareProvider"
+    action: ALLOW
+}
+
+rule CareProvider_Patient_View {
+    description: "Allow CareProviders to view patients"
+    participant: "org.jphr.network.CareProvider"
+    operation: READ
+    resource: "org.jphr.network.Patient"
+    action: ALLOW
+}
+
+rule CareProvider_CareProvider_Owner {
+    description: "Allow CareProviders to view patients"
+    participant(p): "org.jphr.network.CareProvider"
+    operation: UPDATE, DELETE
+    resource(r): "org.jphr.network.CareProvider"
+    condition: (p.getIdentifier() == r.getIdentifier())
+    action: ALLOW
+}
+
+rule CareProvider_AuthorizationBlock_View {
+  	description: "Patient can view his/her own authorization block"
+    participant: "org.jphr.network.CareProvider"
+    operation: READ
+    resource: "org.jphr.network.AuthorizationBlock"
+    action: ALLOW
+}
+
+rule CareProvider_HealthRecord_View {
+  	description: "Patient can view his/her own authorization block"
+    participant(p): "org.jphr.network.CareProvider"
+    operation: READ
+    resource(r): "org.jphr.network.HealthRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_CreateHealthRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.CreateHealthRecord"
+    action: ALLOW
+}
+
+rule CareProvider_HealthRecord_Create {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.HealthRecord"
+    transaction(tx): "org.jphr.network.CreateHealthRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_ReadHealthRecords_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.ReadHealthRecords"
+    action: ALLOW
+}
+
+rule CareProvider_HealthRecord_Read {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: READ
+    resource: "org.jphr.network.HealthRecord"
+    transaction(tx): "org.jphr.network.ReadHealthRecords"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_UpdateHealthRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.UpdateHealthRecord"
+    action: ALLOW
+}
+
+rule CareProvider_HealthRecord_Update {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: UPDATE
+    resource: "org.jphr.network.HealthRecord"
+    transaction(tx): "org.jphr.network.UpdateHealthRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_DeleteHealthRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.DeleteHealthRecord"
+    action: ALLOW
+}
+
+rule CareProvider_HealthRecord_Delete {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: DELETE
+    resource: "org.jphr.network.HealthRecord"
+    transaction(tx): "org.jphr.network.DeleteHealthRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_CreateSummaryMedicalRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.CreateSummaryMedicalRecord"
+    action: ALLOW
+}
+
+rule CareProvider_SummaryMedicalRecord_Create {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.SummaryMedicalRecord"
+    transaction(tx): "org.jphr.network.CreateSummaryMedicalRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_ReadSummaryMedicalRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.ReadSummaryMedicalRecord"
+    action: ALLOW
+}
+
+rule CareProvider_SummaryMedicalRecord_Read {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: READ
+    resource: "org.jphr.network.SummaryMedicalRecord"
+    transaction(tx): "org.jphr.network.ReadSummaryMedicalRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_UpdateSummaryMedicalRecord_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.UpdateSummaryMedicalRecord"
+    action: ALLOW
+}
+
+rule CareProvider_SummaryMedicalRecord_Update {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: UPDATE
+    resource: "org.jphr.network.SummaryMedicalRecord"
+    transaction(tx): "org.jphr.network.UpdateSummaryMedicalRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+rule Careprovider_SummaryMedicalRecords_All {
+  	description: "Allow All participants to Update Health records"
+    participant(p): "org.jphr.network.CareProvider"
+    operation: READ
+    resource(r): "org.jphr.network.SummaryMedicalRecord"
+    condition: (true)
+    action: ALLOW
+}
+
+
+rule CareProvider_CreateAuthRequest_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.CreateAuthRequest"
+    action: ALLOW
+}
+
+rule CareProvider_AuthorizationRequest_Create {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.AuthorizationRequest"
+    transaction(tx): "org.jphr.network.CreateAuthRequest"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_UpdateAuthRequest_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: ALL
+    resource: "org.jphr.network.UpdateAuthRequest"
+    action: ALLOW
+}
+
+rule CareProvider_AuthorizationRequest_Update {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: UPDATE
+    resource: "org.jphr.network.AuthorizationRequest"
+    transaction(tx): "org.jphr.network.UpdateAuthRequest"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_DeleteAuthRequest_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.DeleteAuthRequest"
+    action: ALLOW
+}
+
+rule CareProvider_AuthorizationRequest_Delete {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: DELETE
+    resource: "org.jphr.network.AuthorizationRequest"
+    transaction(tx): "org.jphr.network.DeleteAuthRequest"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_ReadAuthRequests_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.ReadAuthRequests"
+    action: ALLOW
+}
+
+rule CareProvider_AuthorizationRequest_Read {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: READ
+    resource: "org.jphr.network.AuthorizationRequest"
+    transaction(tx): "org.jphr.network.ReadAuthRequests"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_AuthorizationRequest_All{
+    description: "Allow all participants to submit transactions"
+    participant(p): "org.jphr.network.CareProvider"
+    operation: ALL
+    resource(r): "org.jphr.network.AuthorizationRequest"
+    condition: (p.getIdentifier() == r.provider)
+    action: ALLOW
+}
+
+rule CareProvider_ReadAuthorizations_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE
+    resource: "org.jphr.network.ReadAuthorizations"
+    action: ALLOW
+}
+
+rule CareProvider_AuthorizationBlock_Read {
+    description: "Allow patients to Create Health records"
+    participant: "org.jphr.network.CareProvider"
+    operation: READ
+    resource: "org.jphr.network.AuthorizationBlock"
+    transaction(tx): "org.jphr.network.ReadAuthorizations"
+    condition: (true)
+    action: ALLOW
+}
+
+rule CareProvider_ReadPatients_Create{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: CREATE, READ
+    resource: "org.jphr.network.ReadPatients"
+    action: ALLOW
+}
+
+rule CareProvider_Patients_All{
+    description: "Allow all participants to submit transactions"
+    participant: "org.jphr.network.CareProvider"
+    operation: ALL
+    resource: "org.jphr.network.Patient"
+    transaction(tx): "org.jphr.network.ReadPatients"
+    condition: (true)
+    action: ALLOW
+}
+
+
+/*
+Admin Access contol rules
+*/
+rule SystemACL {
+    description:  "System ACL to permit all access"
+    participant: "org.hyperledger.composer.system.Participant"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}

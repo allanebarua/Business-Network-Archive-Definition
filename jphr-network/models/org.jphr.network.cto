@@ -1,0 +1,244 @@
+
+namespace org.jphr.network
+
+/*
+Concepts
+*/
+concept Authorization {
+  o String careProviderId
+  o DateTime startDate optional
+  o DateTime endDate optional
+  o AccessRights[] accessRights
+}
+
+concept Name {
+  o String title
+  o String firstName
+  o String middleName
+  o String lastName
+}
+
+concept Diagnosis {
+  o String procedure
+  o String result
+}
+
+concept Address {
+  o String box
+  o String town
+  o String postalCode
+}
+
+concept SummaryMedicalData {
+  o String bloodGroup
+  o String[] allergies
+}
+
+concept ReadHealthRecordReturn {
+  o HealthRecord healthRecord
+  o AccessRights[] accessRights
+  o Patient owner
+}
+
+concept ReadSummaryMedicalRecordReturn {
+  o SummaryMedicalRecord healthRecord
+  o AccessRights[] accessRights
+  o Patient owner
+}
+
+concept OtherInfo {
+  o String about
+  o String body
+}
+
+concept EmergencyContact {
+  o String designation
+  o String phone
+  o String email
+  o String name
+}
+
+
+/*
+Enumerations
+*/
+enum ProviderType {
+  o Phycisian
+  o Pharmasist
+  o Dentist
+  o Other
+}
+
+enum AccessRights {
+  o Read
+  o Create
+  o Update
+  o Delete
+}
+
+enum Gender {
+  o Male
+  o Female
+  o Other
+}
+
+enum ParticipantType {
+  o Patient
+  o CareProvider
+}
+
+enum AuthBlockAction {
+  o Create
+  o Grant
+  o Revoke
+  o UpdateAccessRights
+}
+
+
+
+
+/*
+Participants
+*/
+abstract participant NetworkParticipant identified by participantId {
+  o String participantId
+  o Address participantAddress optional
+  o ParticipantType participantType
+  o Name participantName
+  o String dob
+  o Gender gender
+  o String email
+  o String[] phone
+  o String password
+}
+
+participant Patient extends NetworkParticipant {
+  o String[] authorizedProviders optional
+}
+
+participant CareProvider extends NetworkParticipant {
+  o ProviderType providerType
+}
+
+
+
+
+/*
+Assets
+*/
+asset HealthRecord identified by healthRecordId {
+  o String healthRecordId
+  o Diagnosis[] diagnosis
+  o String[] symptoms
+  o String[] treatment
+  o String dateCreated
+  --> Patient owner
+  --> NetworkParticipant createdBy
+  --> NetworkParticipant updatedBy optional
+}
+
+asset SummaryMedicalRecord identified by summaryMedicalRecordId {
+  o String summaryMedicalRecordId
+  o String bloodGroup
+  o String[] allergies
+  o OtherInfo[] otherInfo
+  o String dateCreated
+  o EmergencyContact[] emergencyContacts
+  --> Patient owner
+  --> NetworkParticipant createdBy
+  --> NetworkParticipant updatedBy optional
+}
+
+asset AuthorizationBlock identified by authid {
+  o String authid
+  --> Patient owner
+  o Authorization[] authorization
+}
+
+asset AuthorizationRequest identified by requestId {
+  o String requestId
+  o String patient
+  o String provider
+  o AccessRights[] accessRights
+  o String reason optional
+  o String type
+  o String state
+}
+
+
+
+/*
+Transactions
+*/
+@returns(String)
+transaction CreateHealthRecord {
+  o HealthRecord newHealthRecord
+}
+
+@returns(ReadHealthRecordReturn[])
+transaction ReadHealthRecords {
+}
+
+@returns(String)
+transaction DeleteHealthRecord {
+  o String healthRecordId
+}
+
+@returns(String)
+transaction UpdateHealthRecord {
+  o HealthRecord healthRecordUpdate
+}
+
+@returns(String)
+transaction ManageAuthorization {
+  o AuthorizationBlock authBlock
+  o AuthBlockAction action
+}
+
+@returns(String)
+transaction CreateSummaryMedicalRecord {
+  o SummaryMedicalRecord newHealthRecord
+}
+
+@returns(ReadSummaryMedicalRecordReturn[])
+transaction ReadSummaryMedicalRecord {
+}
+
+@returns(String)
+transaction UpdateSummaryMedicalRecord {
+  o SummaryMedicalRecord healthRecordUpdate
+}
+
+
+
+@returns(String)
+transaction CreateAuthRequest {
+  o AuthorizationRequest authRequest
+}
+
+@returns(String)
+transaction UpdateAuthRequest {
+  o AuthorizationRequest authRequest
+}
+
+@returns(String)
+transaction DeleteAuthRequest {
+  o String requestId
+}
+
+@returns(AuthorizationRequest[])
+transaction ReadAuthRequests {
+}
+
+@returns(AuthorizationBlock[])
+transaction ReadAuthorizations {
+}
+
+
+@returns(CareProvider[])
+transaction ReadProviders {
+}
+
+@returns(Patient[])
+transaction ReadPatients {
+}
